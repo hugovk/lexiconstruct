@@ -43,28 +43,51 @@ TOTAL_QUOTATIONS = 0
 
 def print_front_page():
     print("### Edition The First")
+    print()
     print("### O F")
+    print()
     print("# A DICTIONARY OF NOT-A-WORDS")
-    print("FROM")
+    print()
+    print("### FROM")
+    print()
     print("# TWITTER")
+    print()
     print("## Of Which A Tweeter")
+    print()
     print("### Has Thus DECLARED Such Word Is")
+    print()
     print("# NOT A WORD")
+    print()
     print("## With Example Usage,")
+    print()
     print("### AND A")
+    print()
     print("# DEFINITION")
+    print()
     print("### Where Available.")
+    print()
     print("### Collected Between")
+    print()
     print("## OCTOBER 2013")
+    print()
     print("### A N D")
+    print()
     print("## NOVEMBER 2014.")
+    print()
     print("## Compiled by")
+    print()
     print("# @hugovk")
+    print()
     print("### F O R")
+    print()
     print("## NaNoGenMo")
+    print()
     print("### A N D")
+    print()
     print("## The Wordnik Hackathon")
+    print()
     print("### In This Year,")
+    print()
     print("# MMXIV")
     print()
     print()
@@ -92,7 +115,7 @@ def print_preface(mincites):
     print()
     print("Each word listed here is the result of someone claiming it is not a word.")
     print()
-    print("This dictionary is sourced from tweets of the form \"X is not a word\", \"X isn't a word\" and \"X ain't a word, collected between 25th October Oct 25 2013 and 9th November 2014 by [@nixibot](https://twitter.com/nixibot). Only those words with at least " + p.plural("quotation", mincites) + " are included.")
+    print("This dictionary is sourced from tweets containing the text \"X is not a word\", \"X isn't a word\" and \"X ain't a word\", collected between 25th October Oct 25 2013 and 9th November 2014 by [@nixibot](https://twitter.com/nixibot). Only those words with at least " + p.plural("quotation", mincites) + " are included.")
     print()
     print("Where available, a definition is included via Wordnik. Not all words have definitions, and only the first definition is used, which may or not be a different part of speech or the correct defintion. No attempt has been made to correctly categorise them.")
     print()
@@ -211,7 +234,7 @@ def process_tweets(tweets):
             current_word = word
             TOTAL_HEADWORDS += 1
             print()
-            print("**" + word + "** ")
+            print("**" + word + "**  ")
             print_wordnik_definitions(word)
 
         if tweet['user_name'] == tweet['screen_name']:
@@ -221,7 +244,7 @@ def process_tweets(tweets):
 
         quote = (format_date(tweet['created_at'])
                  + " " + name
-                 + ": " + tweet['text'].replace("\r\n", " "))
+                 + ": " + tweet['text'].replace("\r\n", " ") + "  ")
         print(quote)
         TOTAL_QUOTATIONS += 1
     print()
@@ -288,7 +311,7 @@ def format_definitions(definitions):
             else:
                 pos = ""
             def_string = (pos + d.text.strip(" ").rstrip(".") +
-                          " [" + d.sourceDictionary + "]")
+                          " [" + d.sourceDictionary + "]  ")
             print_it(def_string)
             DEFS_USED += 1
             if d.sourceDictionary not in ATTRIBUTIONS:
