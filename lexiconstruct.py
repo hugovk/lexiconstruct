@@ -31,7 +31,7 @@ wordnik_client = swagger.ApiClient(
     WORDNIK_API_KEY, 'http://api.wordnik.com/v4')
 wordApi = WordApi.WordApi(wordnik_client)
 
-DEFS_CACHE = "/Users/hugo/defs_cache.pkl"
+DEFS_CACHE = "M:/bin/data/defs_cache.pkl"
 DEFS = {}
 ATTRIBUTIONS = {}
 
@@ -48,49 +48,51 @@ def print_front_page():
     print()
     print("# A DICTIONARY OF NOT-A-WORDS")
     print()
-    print("### FROM")
+    print("#### FROM")
     print()
-    print("# TWITTER")
+    print("## TWITTER")
     print()
-    print("## Of Which A Tweeter")
+    print("### Of Which A Tweeter")
     print()
-    print("### Has Thus DECLARED Such Word Is")
+    print("#### Has Thus DECLARED Such Word Is")
     print()
-    print("# NOT A WORD")
+    print("## NOT A WORD")
     print()
-    print("## With Example Usage,")
+    print("### With Example Usage,")
     print()
-    print("### AND A")
+    print("#### AND A")
     print()
-    print("# DEFINITION")
+    print("## DEFINITION")
     print()
-    print("### Where Available.")
+    print("##### Where Available.")
     print()
     print("### Collected Between")
     print()
     print("## OCTOBER 2013")
     print()
-    print("### A N D")
+    print("#### A N D")
     print()
     print("## NOVEMBER 2014.")
     print()
-    print("## Compiled by")
+    print("### Compiled by")
     print()
-    print("# @hugovk")
+    print("## @hugovk")
     print()
     print("### F O R")
     print()
-    print("## NaNoGenMo")
+    print("### NaNoGenMo")
     print()
-    print("### A N D")
+    print("#### A N D")
     print()
-    print("## The Wordnik Hackathon")
+    print("### The Wordnik Hackathon")
     print()
-    print("### In This Year,")
+    print("##### In This Year,")
     print()
-    print("# MMXIV")
+    print("## MMXIV")
     print()
     print()
+    print("<P> <br>")
+    print("<P> <hr>")
 
 
 def print_toc():
@@ -115,9 +117,9 @@ def print_preface(mincites):
     print()
     print("Each word listed here is the result of someone claiming it is not a word.")
     print()
-    print("This dictionary is sourced from tweets containing the text \"X is not a word\", \"X isn't a word\" and \"X ain't a word\", collected between 25th October Oct 25 2013 and 9th November 2014 by [@nixibot](https://twitter.com/nixibot). Only those words with at least " + p.plural("quotation", mincites) + " are included.")
+    print("This dictionary is sourced from tweets containing the text \"X is not a word\", \"X isn't a word\" and \"X ain't a word\", collected between 25th October Oct 25 2013 and 10th November 2014 by [\@nixibot](https://twitter.com/nixibot). Only those words with at least " + p.plural("quotation", mincites) + " are included.")
     print()
-    print("Where available, a definition is included via Wordnik. Not all words have definitions, and only the first definition is used, which may or not be a different part of speech or the correct defintion. No attempt has been made to correctly categorise them.")
+    print("Where available, a definition is included via Wordnik. Not all words have definitions, and only the first definition is used, which may or not be a different part of speech or the correct definition. No attempt has been made to correctly categorise them.")
     print()
     print("But what is a word, and what isn't?")
     print()
@@ -146,7 +148,7 @@ def print_top_100(tweets):
     print()
     top = most_frequent_words_and_counts(words, 100)
     for i, (word, count) in enumerate(top):
-        print(str(i+1) + ". " + word + " (" + commafy(count) + ")")
+        print(str(i+1) + '. <a href="#' + word + '"</a>' + word + '</a> (' + commafy(count) + ')')
     print()
     print()
 
@@ -178,7 +180,7 @@ def print_attributions():
 
     print("# Definitions")
     print()
-    print("Definitions powered by Wordnik.")
+    print("Definitions powered by [Wordnik](https://www.wordnik.com/).")
     print()
     for attribution in od:
         print_it(" * [" + attribution + "] " + od[attribution])
@@ -221,6 +223,13 @@ def format_date(date_text):
     return(yyyy + " " + mmm + " " + dd)
 
 
+def markdown_escape(text):
+    chars = "\`*_{}[]()>#+-.!$"
+    for c in chars:
+        text = text.replace(c, "\\" + c)
+    return text
+
+
 def process_tweets(tweets):
     global TOTAL_HEADWORDS, TOTAL_QUOTATIONS
 
@@ -234,7 +243,7 @@ def process_tweets(tweets):
             current_word = word
             TOTAL_HEADWORDS += 1
             print()
-            print("**" + word + "**  ")
+            print('**<a name="' + word + '"></a><span class="headword">' + word + '</span>**  ')
             print_wordnik_definitions(word)
 
         if tweet['user_name'] == tweet['screen_name']:
@@ -242,9 +251,12 @@ def process_tweets(tweets):
         else:
             name = tweet['user_name'] + " (@" + tweet['screen_name'] + ")"
 
+        name = '<span class="name">' + markdown_escape(name) + ": " + '</span>'
+        text = markdown_escape(tweet['text'].replace("\r\n", " "))
+
         quote = (format_date(tweet['created_at'])
                  + " " + name
-                 + ": " + tweet['text'].replace("\r\n", " ") + "  ")
+                 + text + "  ")
         print(quote)
         TOTAL_QUOTATIONS += 1
     print()
@@ -310,8 +322,8 @@ def format_definitions(definitions):
                 pos = "*" + d.partOfSpeech + "* "
             else:
                 pos = ""
-            def_string = (pos + d.text.strip(" ").rstrip(".") +
-                          " [" + d.sourceDictionary + "]  ")
+            def_string = (pos + d.text.strip(' ').rstrip('.') +
+                          ' <span class="dict">[' + d.sourceDictionary + ']</span>  ')
             print_it(def_string)
             DEFS_USED += 1
             if d.sourceDictionary not in ATTRIBUTIONS:
@@ -364,7 +376,7 @@ if __name__ == "__main__":
         description="Create a dictionary from archived tweets.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        '-c', '--csv', default='/Users/hugo/Dropbox/bin/data/nixibot.csv',
+        '-c', '--csv', default='M:/bin/data/nixibot.csv',
         help='Input CSV file')
     parser.add_argument(
         '-n', '--mincites',  type=int, default=4,
