@@ -243,7 +243,9 @@ def process_tweets(tweets):
             current_word = word
             TOTAL_HEADWORDS += 1
             print()
-            print('**<a name="' + word + '"></a><span class="headword">' + word + '</span>**  ')
+            escaped_word = markdown_escape(word)
+            print('**<a name="' + word + '"></a><span class="headword">' +
+                  escaped_word + '</span>**  ')
             print_wordnik_definitions(word)
 
         if tweet['user_name'] == tweet['screen_name']:
