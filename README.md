@@ -1,6 +1,16 @@
 lexiconstruct
 =============
 
+A Dictionary of Not-A-Words
+---------------------------
+
+ * [HTML](https://hugovk.github.io/lexiconstruct/a-dictionary-of-not-a-words.html)
+
+ * [PDF](https://dl.dropboxusercontent.com/u/3065276/a-dictionary-of-not-a-words.pdf)
+
+Production
+----------
+
 Create a dictionary from archived tweets.
 
     python lexiconstruct.py -n 2 > a-dictionary-of-not-a-words.md
